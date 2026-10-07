@@ -4,7 +4,14 @@ test('menu móvel abre pelo teclado, alterna preferências e fecha com Escape e 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
   const nav = page.getByRole('navigation');
+  const userLogin = nav.getByRole('link', { name: 'Acesso do usuário' });
+  await expect(userLogin).toHaveAttribute('href', '/login');
   const toggle = nav.getByRole('button', { name: 'Abrir menu', exact: true });
+  await toggle.click();
+  await expect(userLogin).toBeVisible();
+  await userLogin.click();
+  await expect(page).toHaveURL(/\/login$/);
+  await page.goto('/');
   await expect(nav.getByRole('link', { name: 'Eventos', exact: true })).not.toBeVisible();
 
   await toggle.focus();

@@ -2068,6 +2068,28 @@ body.light-mode .theme-row {
   transition: background-color 0.18s ease;
 }
 
+.landing-modern .landing-user-login-action {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--landing-line);
+  border-radius: 10px;
+  color: var(--landing-text);
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1.4;
+  white-space: nowrap;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.landing-modern .landing-user-login-action:hover {
+  border-color: var(--primary-orange);
+  background: var(--landing-panel);
+}
+
 body.light-mode .landing-modern .landing-login-action {
   color: #242424;
 }

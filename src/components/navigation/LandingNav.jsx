@@ -1,4 +1,4 @@
-import { ArrowUpRight, Github, LogIn, LogOut, Menu, Moon, Sun, Ticket, X } from 'lucide-react';
+import { ArrowUpRight, Github, LogIn, LogOut, Menu, Moon, Sun, Ticket, UserRound, X } from 'lucide-react';
 import { useId, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../assets/images/logo.svg';
@@ -85,6 +85,9 @@ export function LandingNav({ isLight, onThemeToggle }) {
             </a>
           </div>
           <div className="landing-nav-account">
+            <Link className="landing-user-login-action" to="/login" onClick={closeMenu}>
+              <UserRound size={18} aria-hidden="true" /> {t('userLogin')}
+            </Link>
             {publicUser ? (
               <>
                 <Link className="landing-login-action" to="/meus-ingressos" onClick={closeMenu}>
