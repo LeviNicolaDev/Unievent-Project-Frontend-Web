@@ -167,6 +167,7 @@ export function PublicAuthPage({ initialMode = "signin" }) {
                 <Lock size={18} />
                 <input
                   type="password"
+                  minLength={isSignUp ? 6 : undefined}
                   placeholder="Sua senha"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
@@ -182,6 +183,7 @@ export function PublicAuthPage({ initialMode = "signin" }) {
                   <Lock size={18} />
                   <input
                     type="password"
+                    minLength={6}
                     placeholder="Repita sua senha"
                     value={confirmPassword}
                     onChange={(event) => setConfirmPassword(event.target.value)}

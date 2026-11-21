@@ -22,13 +22,13 @@ test('redefine a senha e remove token da URL sem iniciar sessão', async ({ page
     return route.fulfill({ json: { mensagem: 'Senha redefinida com sucesso.', tipoUsuario: 'Publico' } });
   });
   await page.goto(`/redefinir-senha?token=${token}`);
-  await page.getByLabel('Nova senha', { exact: true }).fill('novaSenha123');
-  await page.getByLabel('Confirmar nova senha').fill('novaSenha123');
+  await page.getByLabel('Nova senha', { exact: true }).fill('abc123');
+  await page.getByLabel('Confirmar nova senha').fill('abc123');
   await page.getByRole('button', { name: 'Salvar nova senha' }).click();
   await expect(page.getByRole('status')).toHaveText('Senha redefinida com sucesso.');
   await expect(page).toHaveURL(/\/redefinir-senha$/);
   await expect(page.getByRole('link', { name: 'Voltar para o login' })).toHaveAttribute('href', '/entrar');
-  expect(payload).toEqual({ token, senha: 'novaSenha123', confirmacaoSenha: 'novaSenha123' });
+  expect(payload).toEqual({ token, senha: 'abc123', confirmacaoSenha: 'abc123' });
   expect(await page.evaluate(() => localStorage.getItem('unievent.auth.publico'))).toBeNull();
 });
 

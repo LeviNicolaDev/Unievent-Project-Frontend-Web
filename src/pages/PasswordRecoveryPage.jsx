@@ -28,8 +28,8 @@ export function PasswordRecoveryPage({ reset = false }) {
     event.preventDefault();
     if (busy) return;
     setError('');
-    if (reset && (password !== confirmation || password.length < 8 || new TextEncoder().encode(password).length > 72)) {
-      setError('Informe senhas iguais, com no mínimo 8 caracteres e no máximo 72 bytes.');
+    if (reset && (password !== confirmation || password.length < 6 || new TextEncoder().encode(password).length > 72)) {
+      setError('Informe senhas iguais, com no mínimo 6 caracteres e no máximo 72 bytes.');
       return;
     }
     setBusy(true);
@@ -67,10 +67,10 @@ export function PasswordRecoveryPage({ reset = false }) {
               <input type="email" autoComplete="email" required maxLength={254} value={email} onChange={event => setEmail(event.target.value)} />
             </div></label> : <>
               <label className="auth-field"><span>Nova senha</span><div><KeyRound size={18} />
-                <input type="password" autoComplete="new-password" required minLength={8} maxLength={72} value={password} onChange={event => setPassword(event.target.value)} />
+                <input type="password" autoComplete="new-password" required minLength={6} maxLength={72} value={password} onChange={event => setPassword(event.target.value)} />
               </div></label>
               <label className="auth-field"><span>Confirmar nova senha</span><div><KeyRound size={18} />
-                <input type="password" autoComplete="new-password" required minLength={8} maxLength={72} value={confirmation} onChange={event => setConfirmation(event.target.value)} />
+                <input type="password" autoComplete="new-password" required minLength={6} maxLength={72} value={confirmation} onChange={event => setConfirmation(event.target.value)} />
               </div></label>
             </>}
             <button className="auth-submit" type="submit" disabled={busy}>{busy ? 'Aguarde...' : reset ? 'Salvar nova senha' : 'Enviar link de recuperação'}</button>

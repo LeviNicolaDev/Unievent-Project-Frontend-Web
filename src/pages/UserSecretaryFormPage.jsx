@@ -198,7 +198,7 @@ export function UserSecretaryFormPage({ mode = 'create' }) {
             <FormField label={isEdit ? 'Nova senha' : 'Senha inicial'}>
               <span className="admin-flow-input-icon">
                 <KeyRound size={18} />
-                <input type="password" value={form.senha} onChange={(event) => updateField('senha', event.target.value)} placeholder={isEdit ? 'Preencha apenas se quiser alterar' : 'Senha inicial'} required={!isEdit} />
+                <input type="password" minLength={6} value={form.senha} onChange={(event) => updateField('senha', event.target.value)} placeholder={isEdit ? 'Preencha apenas se quiser alterar' : 'Senha inicial'} required={!isEdit} />
               </span>
             </FormField>
 

@@ -2321,7 +2321,7 @@ body.light-mode .auth-topbar {
 .auth-back-link,
 .auth-language-toggle,
 .auth-theme-toggle {
-  width: 42px;
+  width: 160px;
   height: 42px;
   display: grid;
   place-items: center;
@@ -2329,8 +2329,9 @@ body.light-mode .auth-topbar {
   border-radius: 8px;
   background: var(--auth-surface);
   color: var(--auth-text);
-  font-weight: 900;
+  font-weight: 600;
   transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  margin-top: 16px;
 }
 
 .auth-topbar-actions {

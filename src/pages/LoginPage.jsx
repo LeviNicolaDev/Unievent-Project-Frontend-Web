@@ -269,6 +269,7 @@ export function LoginPage({ initialMode = "signin" }) {
                 <Lock size={18} />
                 <input
                   type="password"
+                  minLength={isSignUp ? 6 : undefined}
                   placeholder={t("enterPassword")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -284,6 +285,7 @@ export function LoginPage({ initialMode = "signin" }) {
                   <Lock size={18} />
                   <input
                     type="password"
+                    minLength={6}
                     placeholder={t("confirmPasswordPlaceholder")}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
