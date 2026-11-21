@@ -111,6 +111,7 @@ export function PublicEventsPage() {
   }, []);
 
   useEffect(() => {
+    let active = true;
     async function loadEvents() {
       setIsLoading(true);
       setError(null);
@@ -126,6 +127,7 @@ export function PublicEventsPage() {
           PageSize: 12,
           ...range,
         });
+        if (!active) return;
         setEvents(result.items || []);
         setMeta({
           page: result.page || 1,
@@ -134,13 +136,14 @@ export function PublicEventsPage() {
           totalPages: result.totalPages || 0,
         });
       } catch (err) {
-        setError(err.message || "Erro ao carregar eventos");
+        if (active) setError(err.message || "Erro ao carregar eventos");
       } finally {
-        setIsLoading(false);
+        if (active) setIsLoading(false);
       }
     }
 
     loadEvents();
+    return () => { active = false; };
   }, [filters]);
 
   function updateFilter(key, value) {

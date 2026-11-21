@@ -50,6 +50,29 @@ test('falha de instituições é informada sem impedir categorias', async ({ pag
   await expect(page.locator('option[value="Palestra"]')).toHaveCount(1);
 });
 
+test('resposta antiga não sobrescreve o filtro mais recente', async ({ page }) => {
+  await mockApi(page);
+  let releaseOld;
+  let markOldRequested;
+  const oldRequested = new Promise(resolve => { markOldRequested = resolve; });
+  const oldGate = new Promise(resolve => { releaseOld = resolve; });
+  await page.route(/\/api\/Evento(?:\?|$)/, async route => {
+    const search = new URL(route.request().url()).searchParams.get('Search');
+    if (search === 'antigo') { markOldRequested(); await oldGate; }
+    return route.fulfill({ json: { items: search ? [{ id: 1, nome: `Resultado ${search}`, capacidade: 10 }] : [], page: 1, totalPages: 1 } });
+  });
+  await page.goto('/descobrir-eventos');
+  const input = page.getByPlaceholder('Pesquisar evento');
+  await input.fill('antigo');
+  await oldRequested;
+  await input.fill('novo');
+  await expect(page.getByRole('heading', { name: 'Resultado novo' })).toBeVisible();
+  releaseOld();
+  await page.waitForLoadState('networkidle');
+  await expect(page.getByRole('heading', { name: 'Resultado novo' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Resultado antigo' })).toHaveCount(0);
+});
+
 for (const width of [1440, 390]) {
   test(`lista sobrepõe o conteúdo sem alterar os filtros em ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 850 });
@@ -58,6 +81,8 @@ for (const width of [1440, 390]) {
     })));
     await page.goto('/descobrir-eventos');
     const select = page.getByRole('combobox', { name: 'Instituição', exact: true });
+    await page.evaluate(() => document.fonts.ready);
+    await expect(page.locator('.public-events-grid')).toHaveAttribute('aria-busy', 'false');
     const before = await page.locator('.public-events-filters').boundingBox();
     const gridBefore = await page.locator('.public-events-grid').evaluate(element => element.getBoundingClientRect().top + window.scrollY);
     await select.click();

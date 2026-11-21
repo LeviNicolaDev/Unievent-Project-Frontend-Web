@@ -21,6 +21,7 @@ Origem de produção: https://unievent-web.vercel.app.
 | Componente Button com `to` descarta propriedades de link | As propriedades são encaminhadas e botões sem tipo explícito não submetem formulários por acidente. |
 | Link GitHub de Levi retorna 404 | Corrigido para o perfil verificado `LeviNicolaDev`. |
 | Instituições públicas sem ID desaparecem do filtro | Entradas do catálogo com `id: null` são exibidas e filtradas por `InstituicaoCodigo`; instituições cadastradas usam `InstituicaoId`. URLs antigas com ID continuam funcionando e podem ser limpas. Falhas na listagem são informadas. |
+| Respostas antigas sobrescrevem os filtros atuais da busca pública | Ao trocar filtros ou sair da página, o resultado da consulta anterior é ignorado, inclusive seus estados de erro e carregamento. |
 | Formulário de contato e recuperação de senha aparentam funcionar | Ações indisponíveis são informadas; o contato não simula envio e a recuperação não aponta mais para um fragmento inexistente. Esses serviços ainda precisam de implementação própria. |
 
 ## Verificação no deploy existente
