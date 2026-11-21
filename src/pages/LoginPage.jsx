@@ -292,7 +292,7 @@ export function LoginPage({ initialMode = "signin" }) {
                 </div>
               </label>
             ) : (
-              <p className="auth-forgot-link">Recuperação de senha indisponível no momento.</p>
+              <Link className="auth-forgot-link" to="/recuperar-senha?perfil=administrativo">{t('forgotPassword')}</Link>
             )}
 
             <button className="auth-submit" type="submit" disabled={isLoading}>

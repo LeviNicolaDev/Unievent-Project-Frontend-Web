@@ -191,6 +191,7 @@ export function PublicAuthPage({ initialMode = "signin" }) {
               </label>
             )}
 
+            {!isSignUp && <Link className="auth-forgot-link" to="/recuperar-senha?perfil=publico">Esqueci minha senha</Link>}
             <button className="auth-submit" type="submit" disabled={isLoading}>
               {isLoading ? "Aguarde..." : isSignUp ? "Criar conta" : "Entrar"}
             </button>

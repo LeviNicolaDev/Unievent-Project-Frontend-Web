@@ -19,3 +19,9 @@ Detalhes de endpoints, SMTP e migration estão em `docs/CONFIRMACAO_EMAIL.md` no
 A revisão de botões, destinos e configuração de produção está em [Revisão de navegação](docs/REVISAO_NAVEGACAO.md). O front de produção é `https://unievent-web.vercel.app`; configure a API pública na Vercel conforme `.env.production.example`. O arquivo `vercel.json` permite abrir e recarregar rotas diretamente.
 
 Validação: `npm run build` e `npm run test:e2e -- tests/email-confirmation.spec.js` (requer Chromium do Playwright).
+
+## Recuperação de senha
+
+Os logins administrativo e público oferecem **Esqueci minha senha**. A tela `/recuperar-senha` solicita um link de 30 minutos e `/redefinir-senha` permite definir a nova senha. O sucesso não inicia sessão automaticamente. A API atende também aluno mobile, preserva a confirmação de e-mail e revoga sessões anteriores após a troca.
+
+Antes de publicar, aplique a migration `AddPasswordRecovery` da API. Use o SMTP já configurado e `EmailSettings__BaseUrl=https://unievent-web.vercel.app`. Detalhes e payloads estão em `docs/RECUPERACAO_SENHA.md` no repositório da API. Testes web: `npm run test:e2e -- tests/password-recovery.spec.js`.

@@ -29,6 +29,7 @@ import { SecretaryRegistrationPage } from '../pages/SecretaryRegistrationPage.js
 import { UserSecretaryFormPage } from '../pages/UserSecretaryFormPage.jsx';
 import { UsersSecretaryPage } from '../pages/UsersSecretaryPage.jsx';
 import { SupportPage } from '../pages/SupportPage.jsx';
+import { PasswordRecoveryPage } from '../pages/PasswordRecoveryPage.jsx';
 
 export function AppRoutes() {
   return (
@@ -44,6 +45,8 @@ export function AppRoutes() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/secretaria/cadastro" element={<SecretaryRegistrationPage />} />
         <Route path="/confirmar-email" element={<ConfirmEmailPage />} />
+        <Route path="/recuperar-senha" element={<PasswordRecoveryPage key="request" />} />
+        <Route path="/redefinir-senha" element={<PasswordRecoveryPage key="reset" reset />} />
       </Route>
 
       <Route element={<AdminLayout />}>

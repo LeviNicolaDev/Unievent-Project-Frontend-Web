@@ -86,10 +86,11 @@ test('confirmação ignora destino web antigo e usa login público nesta origem'
   await expect(page).toHaveURL('http://127.0.0.1:5176/entrar');
 });
 
-test('ações indisponíveis não simulam envio ou recuperação', async ({ page }) => {
+test('contato indisponível não simula envio e recuperação abre a tela correta', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('.landing-contact-form button')).toBeDisabled();
   await page.goto('/login');
   await expect(page.locator('a[href="#recuperar"]')).toHaveCount(0);
-  await expect(page.getByText('Recuperação de senha indisponível no momento.')).toBeVisible();
+  await page.getByRole('link', { name: 'Esqueci minha senha' }).click();
+  await expect(page).toHaveURL(/\/recuperar-senha\?perfil=administrativo$/);
 });

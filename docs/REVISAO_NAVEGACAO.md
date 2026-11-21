@@ -22,7 +22,8 @@ Origem de produção: https://unievent-web.vercel.app.
 | Link GitHub de Levi retorna 404 | Corrigido para o perfil verificado `LeviNicolaDev`. |
 | Instituições públicas sem ID desaparecem do filtro | Entradas do catálogo com `id: null` são exibidas e filtradas por `InstituicaoCodigo`; instituições cadastradas usam `InstituicaoId`. URLs antigas com ID continuam funcionando e podem ser limpas. Falhas na listagem são informadas. |
 | Respostas antigas sobrescrevem os filtros atuais da busca pública | Ao trocar filtros ou sair da página, o resultado da consulta anterior é ignorado, inclusive seus estados de erro e carregamento. |
-| Formulário de contato e recuperação de senha aparentam funcionar | Ações indisponíveis são informadas; o contato não simula envio e a recuperação não aponta mais para um fragmento inexistente. Esses serviços ainda precisam de implementação própria. |
+| Formulário de contato aparenta funcionar | O contato não simula envio; o serviço de contato ainda precisa de implementação própria. |
+| Recuperação de senha aponta para um fragmento inexistente | Implementadas as telas de solicitação e redefinição, integradas à API com tokens temporários de uso único e revogação de sessões anteriores. |
 
 ## Verificação no deploy existente
 

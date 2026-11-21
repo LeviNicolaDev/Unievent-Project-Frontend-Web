@@ -6,6 +6,6 @@ export function getLoginReturnPath(value, scope) {
   if (typeof value !== 'string' || !value.startsWith('/') || value.startsWith('//') || value.includes('\\')) return fallback;
   const url = new URL(value, 'https://unievent-web.vercel.app');
   if (url.origin !== 'https://unievent-web.vercel.app' || getAuthScopeForPath(url.pathname) !== scope) return fallback;
-  if (['/login', '/entrar', '/criar-conta', '/confirmar-email', '/secretaria/cadastro'].includes(url.pathname)) return fallback;
+  if (['/login', '/entrar', '/criar-conta', '/confirmar-email', '/recuperar-senha', '/redefinir-senha', '/secretaria/cadastro'].includes(url.pathname)) return fallback;
   return `${url.pathname}${url.search}${url.hash}`;
 }
