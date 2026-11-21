@@ -9,10 +9,14 @@ export function ConfirmEmailPage() {
   const { t } = useLanguage();
   const confirmationKey = searchParams.get("chave");
   const [status, setStatus] = useState(confirmationKey ? "loading" : "missing");
+  const [loginPath, setLoginPath] = useState("/login");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
     let isMounted = true;
+    let redirectTimer;
+    setStatus(confirmationKey ? "loading" : "missing");
+    setMessage("");
 
     async function confirmEmail() {
       if (!confirmationKey) return;
@@ -22,10 +26,11 @@ export function ConfirmEmailPage() {
         if (!isMounted) return;
         setMessage(response?.mensagem || "E-mail confirmado com sucesso.");
         setStatus("success");
+        setLoginPath((response?.tipoUsuario || response?.TipoUsuario) === "Publico" ? "/entrar" : "/login");
 
         const destination = response?.destino || response?.Destino;
         if (destination) {
-          window.setTimeout(() => {
+          redirectTimer = window.setTimeout(() => {
             window.location.href = destination;
           }, 700);
         }
@@ -40,6 +45,7 @@ export function ConfirmEmailPage() {
 
     return () => {
       isMounted = false;
+      window.clearTimeout(redirectTimer);
     };
   }, [confirmationKey]);
 
@@ -55,7 +61,7 @@ export function ConfirmEmailPage() {
               {isSuccess ? <CheckCircle2 size={24} /> : <AlertCircle size={24} />}
             </div>
             <div>
-              <span>UniEvent Admin</span>
+              <span>UniEvent</span>
               <h2>{t("confirmEmailTitle")}</h2>
             </div>
           </div>
@@ -68,7 +74,7 @@ export function ConfirmEmailPage() {
                 : message}
           </p>
 
-          <Link className="auth-submit" to="/login" style={{ textAlign: "center" }}>
+          <Link className="auth-submit" to={loginPath} style={{ textAlign: "center" }}>
             {t("confirmEmailLoginButton")}
           </Link>
         </section>

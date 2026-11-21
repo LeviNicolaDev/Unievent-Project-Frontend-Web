@@ -46,7 +46,7 @@ export function PublicAuthPage({ initialMode = "signin" }) {
           password,
           confirmPassword,
         });
-        setSuccess("Conta criada. Faça login para se inscrever em eventos públicos.");
+        setSuccess("Conta criada. Enviamos um e-mail de confirmação. Ative sua conta pelo link recebido antes de fazer login.");
         setIsSignUp(false);
         setPassword("");
         setConfirmPassword("");
@@ -59,6 +59,11 @@ export function PublicAuthPage({ initialMode = "signin" }) {
       }
       navigate("/descobrir-eventos");
     } catch (err) {
+      if (err.data?.code === "EMAIL_CONFIRMATION_SENT") {
+        setSuccess(err.data.mensagem || "Enviamos um e-mail de confirmação para seu e-mail.");
+        setPassword("");
+        return;
+      }
       setError(err.message || "Não foi possível autenticar");
     } finally {
       setIsLoading(false);

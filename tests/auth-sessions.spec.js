@@ -93,6 +93,31 @@ test("logout administrativo remove somente a sessão do Admin", async ({ page })
   expect(stored.publico).not.toBeNull();
 });
 
+test("logout público encerra a sessão e persiste após recarregar", async ({ page }) => {
+  await page.route("**/api/**", route => route.fulfill({ json: [] }));
+  await page.goto("/descobrir-eventos");
+  await page.evaluate(storedSessions => {
+    Object.entries(storedSessions).forEach(([key, session]) => {
+      localStorage.setItem(key, JSON.stringify(session));
+    });
+  }, sessions);
+  await page.reload();
+  await page.getByRole("button", { name: "Sair", exact: true }).click();
+  await expect(page.getByRole("link", { name: "Entrar", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Sair", exact: true })).toHaveCount(0);
+  const stored = await page.evaluate(() => ({
+    admin: localStorage.getItem("unievent.auth.admin"),
+    secretaria: localStorage.getItem("unievent.auth.secretaria"),
+    publico: localStorage.getItem("unievent.auth.publico"),
+  }));
+  expect(stored.publico).toBeNull();
+  expect(stored.admin).not.toBeNull();
+  expect(stored.secretaria).not.toBeNull();
+  await page.reload();
+  await expect(page.getByRole("link", { name: "Entrar", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Sair", exact: true })).toHaveCount(0);
+});
+
 test("migra a sessão legada para o escopo correspondente", async ({ page }) => {
   await page.addInitScript(() => {
     localStorage.setItem("authToken", "jwt-publico-legado");

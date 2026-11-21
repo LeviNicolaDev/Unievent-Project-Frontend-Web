@@ -17,6 +17,7 @@ function normalizeUserUnievent(user) {
     emailUsuario: user.emailUsuario || user.EmailUsuario || user.email,
     roleUsuario: user.roleUsuario || user.RoleUsuario || 'Admin',
     instituicaoId: null,
+    emailConfirmado: Boolean(user.emailConfirmado ?? user.EmailConfirmado ?? false),
     isAtivo: Boolean(user.isAtivo ?? user.IsAtivo ?? true),
   };
 }
@@ -26,7 +27,6 @@ function toUserUnieventPayload(payload) {
     NomeUsuario: payload.nomeUsuario || payload.nome || payload.name,
     EmailUsuario: payload.emailUsuario || payload.email,
     Senha: payload.senha || payload.password,
-    Chave: payload.chave || payload.key || '',
   };
 }
 

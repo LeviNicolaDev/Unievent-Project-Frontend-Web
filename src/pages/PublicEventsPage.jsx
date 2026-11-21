@@ -158,7 +158,7 @@ export function PublicEventsPage() {
             <>
               <Link className="public-account-link" to="/meus-ingressos">Meus Ingressos</Link>
               <span>{user.email}</span>
-              <button className="public-events-login" type="button" onClick={logout}>Sair</button>
+              <button className="public-events-login" type="button" onClick={() => logout()}>Sair</button>
             </>
           ) : (
             <>

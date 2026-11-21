@@ -15,16 +15,7 @@ import { useAuth } from "../contexts/AuthContext.jsx";
 import { useLanguage } from "../hooks/useLanguage.js";
 import { useTheme } from "../hooks/useTheme.js";
 import { loginAdmin } from "../services/authService.js";
-import { sendAccountConfirmationEmail } from "../services/emailService.js";
 import { saveInitialAdminUnievent } from "../services/userUnieventService.js";
-
-function generateConfirmationKey() {
-  if (typeof crypto !== "undefined" && crypto.randomUUID) {
-    return crypto.randomUUID();
-  }
-
-  return `${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
-}
 
 export function LoginPage({ initialMode = "signin" }) {
   const isInitialSignUp = initialMode === "signup";
@@ -39,10 +30,8 @@ export function LoginPage({ initialMode = "signin" }) {
   const [name, setName] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isResendingEmail, setIsResendingEmail] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [pendingConfirmation, setPendingConfirmation] = useState(null);
 
   useEffect(() => {
     setIsSignUp(isInitialSignUp);
@@ -51,7 +40,6 @@ export function LoginPage({ initialMode = "signin" }) {
   }, [isInitialSignUp]);
 
   function finishSignupSuccess() {
-    setPendingConfirmation(null);
     setSuccess(
       t("signupConfirmationSent") ||
         "Cadastro criado. Enviamos um email de confirmação para o endereço informado. Confirme o email antes de fazer login."
@@ -60,40 +48,6 @@ export function LoginPage({ initialMode = "signin" }) {
     setIsSignUp(false);
     setPassword("");
     setConfirmPassword("");
-  }
-
-  function showEmailSendFailure() {
-    setSuccess(
-      t("signupCreatedEmailFailed") ||
-        "Cadastro criado, mas não foi possível enviar o email de confirmação."
-    );
-    setError(
-      t("signupCreatedEmailRetry") ||
-        "Verifique a configuração de email da API e tente reenviar a confirmação."
-    );
-    setIsSignUp(false);
-    setPassword("");
-    setConfirmPassword("");
-  }
-
-  async function handleResendConfirmationEmail() {
-    if (!pendingConfirmation) {
-      return;
-    }
-
-    setError("");
-    setSuccess("");
-    setIsResendingEmail(true);
-
-    try {
-      await sendAccountConfirmationEmail(pendingConfirmation);
-      finishSignupSuccess();
-    } catch (err) {
-      showEmailSendFailure();
-      console.error("Erro ao reenviar email de confirmação:", err);
-    } finally {
-      setIsResendingEmail(false);
-    }
   }
 
   async function handleSubmit(event) {
@@ -116,29 +70,13 @@ export function LoginPage({ initialMode = "signin" }) {
           throw new Error(t("passwordsDontMatch") || "Senhas não conferem");
         }
 
-        const confirmationKey = generateConfirmationKey();
-
         await saveInitialAdminUnievent({
           nomeUsuario: name,
           emailUsuario: email,
           senha: password,
-          chave: confirmationKey,
         });
 
-        const confirmationData = {
-          email,
-          nome: name,
-          chave: confirmationKey,
-        };
-        setPendingConfirmation(confirmationData);
-
-        try {
-          await sendAccountConfirmationEmail(confirmationData);
-          finishSignupSuccess();
-        } catch (err) {
-          showEmailSendFailure();
-          console.error("Erro ao enviar email de confirmação:", err);
-        }
+        finishSignupSuccess();
         return;
       } else {
         const response = await loginAdmin(email, password);
@@ -151,6 +89,11 @@ export function LoginPage({ initialMode = "signin" }) {
 
       navigate("/home");
     } catch (err) {
+      if (err.data?.code === "EMAIL_CONFIRMATION_SENT") {
+        setSuccess(err.data.mensagem || "Enviamos um e-mail de confirmação para seu e-mail.");
+        setPassword("");
+        return;
+      }
       const message = err.message || "Erro ao fazer login";
       setError(message);
       console.error("Erro de autenticação:", err);
@@ -248,7 +191,6 @@ export function LoginPage({ initialMode = "signin" }) {
               setIsSignUp(true);
               setError("");
               setSuccess("");
-              setPendingConfirmation(null);
             }}
           >
               Cadastro Admin UniEvent
@@ -288,20 +230,6 @@ export function LoginPage({ initialMode = "signin" }) {
             >
               {error}
             </div>
-          )}
-
-          {pendingConfirmation && !isSignUp && (
-            <button
-              className="auth-submit"
-              type="button"
-              onClick={handleResendConfirmationEmail}
-              disabled={isResendingEmail}
-              style={{ marginBottom: "1rem" }}
-            >
-              {isResendingEmail
-                ? t("resendingConfirmationEmail")
-                : t("resendConfirmationEmail")}
-            </button>
           )}
 
           <form className="auth-form" onSubmit={handleSubmit}>

@@ -102,7 +102,7 @@ export async function request(path, options = {}) {
     const errorText = await response.text().catch(() => '');
     const errorData = parseJson(errorText);
     const errorMessage =
-      response.status === 401
+      response.status === 401 && !skipAuth
         ? 'Sessão expirada ou não autorizada. Faça login novamente.'
         : getErrorMessage(errorData, response.status);
     
