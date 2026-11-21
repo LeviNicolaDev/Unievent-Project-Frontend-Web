@@ -9,7 +9,8 @@ import {
   User,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { getLoginReturnPath } from "../utils/navigation.js";
 import logo from "../assets/images/unieventAdminLogo.svg";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import { useLanguage } from "../hooks/useLanguage.js";
@@ -23,6 +24,7 @@ export function LoginPage({ initialMode = "signin" }) {
   const { language, setLanguage, t } = useLanguage();
   const { isLight, setTheme } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
 
   const [email, setEmail] = useState("");
@@ -83,11 +85,10 @@ export function LoginPage({ initialMode = "signin" }) {
         if (!login(response.user, response.token)) {
           throw new Error("Apenas usuários administrativos podem acessar este sistema");
         }
-        navigate(response.user?.roleUsuario === "Secretaria" ? "/instituicao/dashboard" : "/home");
+        navigate(getLoginReturnPath(location.state?.from, response.user?.roleUsuario === "Secretaria" ? 'secretaria' : 'admin'), { replace: true });
         return;
       }
 
-      navigate("/home");
     } catch (err) {
       if (err.data?.code === "EMAIL_CONFIRMATION_SENT") {
         setSuccess(err.data.mensagem || "Enviamos um e-mail de confirmação para seu e-mail.");
@@ -291,9 +292,7 @@ export function LoginPage({ initialMode = "signin" }) {
                 </div>
               </label>
             ) : (
-              <a className="auth-forgot-link" href="#recuperar">
-                {t("forgotPassword")}
-              </a>
+              <p className="auth-forgot-link">Recuperação de senha indisponível no momento.</p>
             )}
 
             <button className="auth-submit" type="submit" disabled={isLoading}>

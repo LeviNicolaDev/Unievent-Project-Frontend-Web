@@ -58,7 +58,8 @@ export function AppRoutes() {
         <Route path="/eventos/novo" element={<PrivateRoute globalOnly><EventFormPage mode="create" /></PrivateRoute>} />
         <Route path="/eventos/:id/editar" element={<PrivateRoute globalOnly><EventFormPage mode="edit" /></PrivateRoute>} />
         <Route path="/eventos/:id/dashboard" element={<PrivateRoute globalOnly><EventoDashboardPage /></PrivateRoute>} />
-        <Route path="/eventos/preview" element={<PrivateRoute globalOnly><EventPreviewPage /></PrivateRoute>} />
+        <Route path="/eventos/preview" element={<Navigate to="/eventos" replace />} />
+        <Route path="/eventos/:id/preview" element={<PrivateRoute globalOnly><EventPreviewPage /></PrivateRoute>} />
         <Route path="/responsaveis" element={<PrivateRoute globalOnly><PeopleManagementPage /></PrivateRoute>} />
         <Route path="/responsaveis/novo" element={<PrivateRoute globalOnly><ResponsibleFormPage /></PrivateRoute>} />
         <Route path="/responsaveis/:id/editar" element={<PrivateRoute globalOnly><ResponsibleFormPage mode="edit" /></PrivateRoute>} />
@@ -73,7 +74,8 @@ export function AppRoutes() {
         <Route path="/instituicao/eventos/novo" element={<PrivateRoute secretariaOnly><EventFormPage mode="create" /></PrivateRoute>} />
         <Route path="/instituicao/eventos/:id/editar" element={<PrivateRoute secretariaOnly><EventFormPage mode="edit" /></PrivateRoute>} />
         <Route path="/instituicao/eventos/:id/dashboard" element={<PrivateRoute secretariaOnly><EventoDashboardPage /></PrivateRoute>} />
-        <Route path="/instituicao/eventos/preview" element={<PrivateRoute secretariaOnly><EventPreviewPage /></PrivateRoute>} />
+        <Route path="/instituicao/eventos/preview" element={<Navigate to="/instituicao/eventos" replace />} />
+        <Route path="/instituicao/eventos/:id/preview" element={<PrivateRoute secretariaOnly><EventPreviewPage /></PrivateRoute>} />
         <Route path="/instituicao/responsaveis" element={<PrivateRoute secretariaOnly><PeopleManagementPage /></PrivateRoute>} />
         <Route path="/instituicao/responsaveis/novo" element={<PrivateRoute secretariaOnly><ResponsibleFormPage /></PrivateRoute>} />
         <Route path="/instituicao/responsaveis/:id/editar" element={<PrivateRoute secretariaOnly><ResponsibleFormPage mode="edit" /></PrivateRoute>} />

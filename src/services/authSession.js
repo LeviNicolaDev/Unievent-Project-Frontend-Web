@@ -12,6 +12,7 @@ export const AUTH_STORAGE_KEYS = Object.freeze({
 
 const LEGACY_TOKEN_KEY = "authToken";
 const LEGACY_USER_KEY = "authUser";
+export const AUTH_EXPIRED_EVENT = 'unievent:auth-expired';
 
 function normalize(value) {
   return String(value || "").trim().toLowerCase();

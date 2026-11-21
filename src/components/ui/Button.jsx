@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-export function Button({ children, to, icon: Icon, variant = 'primary', className = '', ...props }) {
+export function Button({ children, to, icon: Icon, variant = 'primary', className = '', type = 'button', ...props }) {
   const classNames = `ui-button ui-button--${variant} ${className}`.trim();
   const content = (
     <>
@@ -11,14 +11,14 @@ export function Button({ children, to, icon: Icon, variant = 'primary', classNam
 
   if (to) {
     return (
-      <Link to={to} className={classNames}>
+      <Link to={to} className={classNames} {...props}>
         {content}
       </Link>
     );
   }
 
   return (
-    <button className={classNames} {...props}>
+    <button type={type} className={classNames} {...props}>
       {content}
     </button>
   );

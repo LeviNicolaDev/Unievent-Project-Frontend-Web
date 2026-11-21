@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { isAuthenticatedUser } from "../services/authService.js";
 import {
   AUTH_SCOPES,
+  AUTH_EXPIRED_EVENT,
   AUTH_STORAGE_KEYS,
   getAuthScopeForPath,
   getAuthScopeForUser,
@@ -53,6 +54,17 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     function synchronizeSession(event) {
+      if (event.type === AUTH_EXPIRED_EVENT) {
+        const scope = event.detail?.scope;
+        if (Object.values(AUTH_SCOPES).includes(scope)) {
+          setSessions(current => ({ ...current, [scope]: null }));
+        }
+        return;
+      }
+      if (event.key === null) {
+        setSessions(loadSessions());
+        return;
+      }
       const scope = Object.keys(AUTH_STORAGE_KEYS).find(
         (candidate) => AUTH_STORAGE_KEYS[candidate] === event.key,
       );
@@ -66,7 +78,11 @@ export function AuthProvider({ children }) {
     }
 
     window.addEventListener("storage", synchronizeSession);
-    return () => window.removeEventListener("storage", synchronizeSession);
+    window.addEventListener(AUTH_EXPIRED_EVENT, synchronizeSession);
+    return () => {
+      window.removeEventListener("storage", synchronizeSession);
+      window.removeEventListener(AUTH_EXPIRED_EVENT, synchronizeSession);
+    };
   }, []);
 
   const login = useCallback((userData, authToken) => {
@@ -85,7 +101,8 @@ export function AuthProvider({ children }) {
     return true;
   }, []);
 
-  const logout = useCallback((scope = activeScope) => {
+  const logout = useCallback((requestedScope = activeScope) => {
+    const scope = Object.values(AUTH_SCOPES).includes(requestedScope) ? requestedScope : activeScope;
     removeAuthSession(scope);
     setSessions((current) => ({ ...current, [scope]: null }));
     setError(null);

@@ -1,6 +1,7 @@
 import { ArrowLeft, Lock, Mail, User } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { getLoginReturnPath } from "../utils/navigation.js";
 import logo from "../assets/images/logo.svg";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import { loginPublic, registerPublic } from "../services/authService.js";
@@ -17,6 +18,7 @@ export function PublicAuthPage({ initialMode = "signin" }) {
   const [success, setSuccess] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     setIsSignUp(isInitialSignUp);
@@ -57,7 +59,7 @@ export function PublicAuthPage({ initialMode = "signin" }) {
       if (!login(response.user, response.token)) {
         throw new Error("Não foi possível iniciar a sessão pública");
       }
-      navigate("/descobrir-eventos");
+      navigate(getLoginReturnPath(location.state?.from, 'publico'), { replace: true });
     } catch (err) {
       if (err.data?.code === "EMAIL_CONFIRMATION_SENT") {
         setSuccess(err.data.mensagem || "Enviamos um e-mail de confirmação para seu e-mail.");

@@ -16,6 +16,9 @@ export function PublicTicketDetailPage() {
 
   useEffect(() => {
     let active = true;
+    setIsLoading(true);
+    setError('');
+    setTicket(null);
     getMyTicket(eventoId)
       .then((item) => { if (active) setTicket(item); })
       .catch((err) => { if (active) setError(err.message || "Ingresso não encontrado."); })

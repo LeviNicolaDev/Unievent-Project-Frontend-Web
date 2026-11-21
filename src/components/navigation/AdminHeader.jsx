@@ -32,17 +32,18 @@ const secretariaLinks = [
   { to: "/instituicao/certificados", labelKey: "navCertificates", icon: Award },
 ];
 
-export function AdminHeader({ title, backTo = "/home", greeting, actions }) {
+export function AdminHeader({ title, backTo, greeting, actions }) {
   const { language, setLanguage, t } = useLanguage();
   const { isLight, setTheme } = useTheme();
   const { logout, user } = useAuth();
   const navigate = useNavigate();
   const isGlobalAdmin = user?.roleUsuario === "Admin" && !user?.instituicaoId;
   const links = isGlobalAdmin ? adminLinks : secretariaLinks;
+  const backPath = backTo === undefined ? (isGlobalAdmin ? '/home' : '/instituicao/dashboard') : backTo;
 
   function handleLogout() {
     logout();
-    navigate("/login");
+    navigate("/login", { replace: true });
   }
 
   return (
@@ -85,8 +86,8 @@ export function AdminHeader({ title, backTo = "/home", greeting, actions }) {
         >
           {isLight ? <Moon size={18} /> : <Sun size={18} />}
         </button>
-        {backTo ? (
-          <Link className="back-link" to={backTo}>
+        {backPath ? (
+          <Link className="back-link" to={backPath}>
             <ArrowLeft size={18} />
             <span>{t("back")}</span>
           </Link>

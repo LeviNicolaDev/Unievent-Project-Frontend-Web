@@ -11,7 +11,7 @@ export function PublicParticipantRoute({ children }) {
   }
 
   if (!isAuthenticated || !isPublicParticipant(user)) {
-    return <Navigate to="/entrar" replace state={{ from: location.pathname }} />;
+    return <Navigate to="/entrar" replace state={{ from: location.pathname + location.search + location.hash }} />;
   }
 
   return children;

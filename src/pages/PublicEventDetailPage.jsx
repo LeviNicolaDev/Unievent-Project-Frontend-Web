@@ -54,25 +54,33 @@ export function PublicEventDetailPage() {
   const publicUser = isPublicParticipant(user);
 
   useEffect(() => {
+    let active = true;
     async function loadEvent() {
       setIsLoading(true);
       setError(null);
+      setEvent(null);
+      setRegistration(null);
+      setActionError('');
+      setActionSuccess('');
       try {
         const loadedEvent = await getEventById(id, { skipAuth: !publicUser });
+        if (!active) return;
         setEvent(loadedEvent);
         if (publicUser) {
-          setRegistration(await getMyEventRegistration(id));
+          const loadedRegistration = await getMyEventRegistration(id);
+          if (active) setRegistration(loadedRegistration);
         } else {
           setRegistration(null);
         }
       } catch (err) {
-        setError(err.message || "Evento não encontrado");
+        if (active) setError(err.message || "Evento não encontrado");
       } finally {
-        setIsLoading(false);
+        if (active) setIsLoading(false);
       }
     }
 
     loadEvent();
+    return () => { active = false; };
   }, [id, publicUser]);
 
   useEffect(() => {
@@ -266,7 +274,7 @@ export function PublicEventDetailPage() {
           )}
 
           {!registration && <div className="public-event-actions">
-            {!publicUser && <Link to="/entrar">Entrar para se inscrever</Link>}
+            {!publicUser && <Link to="/entrar" state={{ from: `/descobrir-eventos/${id}` }}>Entrar para se inscrever</Link>}
             {publicUser && (
               <button type="button" disabled={cannotRegister || isRegistering} onClick={handleRegister}>
                 {registration

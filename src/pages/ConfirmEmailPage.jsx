@@ -28,7 +28,11 @@ export function ConfirmEmailPage() {
         setStatus("success");
         setLoginPath((response?.tipoUsuario || response?.TipoUsuario) === "Publico" ? "/entrar" : "/login");
 
-        const destination = response?.destino || response?.Destino;
+        const type = response?.tipoUsuario || response?.TipoUsuario;
+        const providedDestination = response?.destino || response?.Destino;
+        const destination = type === 'Aluno'
+          ? (String(providedDestination || '').startsWith('unievent://') ? providedDestination : null)
+          : (type === 'Publico' ? '/entrar' : '/login');
         if (destination) {
           redirectTimer = window.setTimeout(() => {
             window.location.href = destination;

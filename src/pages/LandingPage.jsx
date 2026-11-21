@@ -20,7 +20,7 @@ const appScreens = [intro, intro2, signin, signup, home, detalhe, ticket, profil
 
 const members = [
   { name: 'Claudio Rodrigues', photo: claudio, githubUrl: 'https://github.com/ClaudioRodri', linkedinUrl: 'https://www.linkedin.com/in/claudio-rodrigues-' },
-  { name: 'Levi Nicola', photo: levi, githubUrl: 'https://github.com/RedFoX1029', linkedinUrl: 'https://www.linkedin.com/in/levi-nicola-803037258/' },
+  { name: 'Levi Nicola', photo: levi, githubUrl: 'https://github.com/LeviNicolaDev', linkedinUrl: 'https://www.linkedin.com/in/levi-nicola-803037258/' },
   { name: 'Ryan Dias', photo: ryan, githubUrl: 'https://github.com/0RyanSouza0', linkedinUrl: 'https://www.linkedin.com/in/ryan-dias-367813300/' },
 ];
 
@@ -101,7 +101,7 @@ export function LandingPage() {
             <p>{t('landingContactCopy')}</p>
           </div>
 
-          <form className="landing-contact-form">
+          <form className="landing-contact-form" onSubmit={event => event.preventDefault()}>
             <span>{t('landingContact')}</span>
             <h2>{t('contactUs')}</h2>
             <label>
@@ -116,7 +116,8 @@ export function LandingPage() {
               {t('message')}
               <textarea placeholder={t('enterMessage')} minLength="20" maxLength="500" rows="6" />
             </label>
-            <button type="button">{t('send')}</button>
+            <p>O envio de mensagens por este formulário ainda não está disponível.</p>
+            <button type="button" disabled>{t('send')}</button>
           </form>
         </section>
       </main>

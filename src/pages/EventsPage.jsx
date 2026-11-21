@@ -192,7 +192,7 @@ export function EventsPage() {
             >
               <Trash2 size={18} />
             </button>
-            <Link to={`${routePrefix}/preview`} title={t("preview")}>
+            <Link to={`${routePrefix}/${row.id}/preview`} title={t("preview")}>
               <Eye size={18} />
             </Link>
             <Link to={`${routePrefix}/${row.id}/dashboard`} title="Visualizar dashboard">

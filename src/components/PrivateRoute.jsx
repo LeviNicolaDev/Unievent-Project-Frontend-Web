@@ -1,9 +1,10 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { isUserSecretary } from '../services/authService.js';
 
 export function PrivateRoute({ children, globalOnly = false, secretariaOnly = false }) {
   const { isAuthenticated, isLoading, user } = useAuth();
+  const location = useLocation();
 
   if (isLoading) {
     return (
@@ -14,7 +15,7 @@ export function PrivateRoute({ children, globalOnly = false, secretariaOnly = fa
   }
 
   if (!isAuthenticated || !isUserSecretary(user)) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" replace state={{ from: location.pathname + location.search + location.hash }} />;
   }
 
   const isGlobalAdmin = user?.roleUsuario === 'Admin' && !user?.instituicaoId;

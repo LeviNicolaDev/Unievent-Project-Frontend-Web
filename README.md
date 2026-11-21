@@ -16,4 +16,6 @@ No desenvolvimento, use API `http://localhost:5227` (perfil `http` ou `https`) e
 
 Detalhes de endpoints, SMTP e migration estão em `docs/CONFIRMACAO_EMAIL.md` no repositório da API.
 
+A revisão de botões, destinos e configuração de produção está em [Revisão de navegação](docs/REVISAO_NAVEGACAO.md). O front de produção é `https://unievent-web.vercel.app`; configure a API pública na Vercel conforme `.env.production.example`. O arquivo `vercel.json` permite abrir e recarregar rotas diretamente.
+
 Validação: `npm run build` e `npm run test:e2e -- tests/email-confirmation.spec.js` (requer Chromium do Playwright).

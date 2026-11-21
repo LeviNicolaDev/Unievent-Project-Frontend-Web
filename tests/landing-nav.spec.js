@@ -4,9 +4,9 @@ test('menu móvel abre pelo teclado, alterna preferências e fecha com Escape e 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
   const nav = page.getByRole('navigation');
-  const userLogin = nav.getByRole('link', { name: 'Acesso do usuário' });
+  const userLogin = nav.getByRole('link', { name: 'Acesso do administrador', includeHidden: true });
   await expect(userLogin).toHaveAttribute('href', '/login');
-  const toggle = nav.getByRole('button', { name: 'Abrir menu', exact: true });
+  const toggle = nav.locator('.landing-menu-toggle');
   await toggle.click();
   await expect(userLogin).toBeVisible();
   await userLogin.click();

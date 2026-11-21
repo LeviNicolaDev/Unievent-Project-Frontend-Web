@@ -1,4 +1,4 @@
-import { getCurrentAuthScope, readAuthSession } from './authSession.js';
+import { AUTH_EXPIRED_EVENT, getCurrentAuthScope, readAuthSession, removeAuthSession } from './authSession.js';
 
 const configuredBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
 const configuredAssetBaseUrl = import.meta.env.VITE_API_ASSET_BASE_URL || '';
@@ -99,6 +99,10 @@ export async function request(path, options = {}) {
 
   // Tratar resposta
   if (!response.ok) {
+    if (response.status === 401 && !skipAuth) {
+      removeAuthSession(scope);
+      window.dispatchEvent(new CustomEvent(AUTH_EXPIRED_EVENT, { detail: { scope } }));
+    }
     const errorText = await response.text().catch(() => '');
     const errorData = parseJson(errorText);
     const errorMessage =
