@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import logo from "../assets/images/logo.svg";
 import { useAuth } from "../contexts/AuthContext.jsx";
+import { InstitutionSelect } from "../components/forms/InstitutionSelect.jsx";
 import { isPublicParticipant } from "../services/authService.js";
 import { getEventCategories, searchEvents } from "../services/eventService.js";
 import { listPublicInstitutions } from "../services/institutionService.js";
@@ -61,6 +62,7 @@ function getDateRange(value) {
 function getInstitutionSearchParams(value) {
   if (!value) return {};
   if (value.startsWith("id:")) return { InstituicaoId: value.slice(3) };
+  if (value.startsWith("codigo:")) return { InstituicaoCodigo: value.slice(7) };
   return { InstituicaoId: value };
 }
 
@@ -73,6 +75,7 @@ export function PublicEventsPage() {
   const [meta, setMeta] = useState({ page: 1, pageSize: 12, totalItems: 0, totalPages: 0 });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [optionsError, setOptionsError] = useState('');
   const publicUser = isPublicParticipant(user);
 
   const filters = useMemo(() => ({
@@ -86,18 +89,25 @@ export function PublicEventsPage() {
   }), [searchParams]);
 
   useEffect(() => {
+    let active = true;
     async function loadOptions() {
-      const [loadedInstitutions, loadedCategories] = await Promise.all([
+      const [loadedInstitutions, loadedCategories] = await Promise.allSettled([
         listPublicInstitutions(),
         getEventCategories(),
       ]);
-      setInstitutions((Array.isArray(loadedInstitutions) ? loadedInstitutions : []).filter((institution) => institution.id));
-      setCategories(loadedCategories);
+      if (!active) return;
+      if (loadedInstitutions.status === 'fulfilled') {
+        setInstitutions(loadedInstitutions.value.filter(institution => institution.filterValue));
+      } else {
+        setOptionsError('Não foi possível carregar as instituições. Atualize a página para tentar novamente.');
+      }
+      if (loadedCategories.status === 'fulfilled') setCategories(loadedCategories.value);
     }
 
     loadOptions().catch((err) => {
       console.error(err);
     });
+    return () => { active = false; };
   }, []);
 
   useEffect(() => {
@@ -135,6 +145,7 @@ export function PublicEventsPage() {
 
   function updateFilter(key, value) {
     const next = new URLSearchParams(searchParams);
+    if (key === 'instituicao') next.delete('instituicaoId');
     if (value) next.set(key, value);
     else next.delete(key);
     next.set("page", "1");
@@ -187,20 +198,14 @@ export function PublicEventsPage() {
           />
         </label>
 
-        <label>
+        <div className="public-events-institution-filter">
           <Filter size={18} />
-          <select
-            value={filters.instituicao}
-            onChange={(event) => updateFilter("instituicao", event.target.value)}
-          >
-            <option value="">Todas as instituições</option>
-            {institutions.map((institution) => (
-              <option key={institution.id} value={institution.id}>
-                {institution.nome || institution.nomeAbreviado || `Instituição #${institution.id}`}
-              </option>
-            ))}
-          </select>
-        </label>
+          <InstitutionSelect
+            value={filters.instituicao && !filters.instituicao.startsWith('id:') && !filters.instituicao.startsWith('codigo:') ? `id:${filters.instituicao}` : filters.instituicao}
+            institutions={institutions}
+            onChange={value => updateFilter("instituicao", value)}
+          />
+        </div>
 
         <label>
           <SlidersHorizontal size={18} />
@@ -240,6 +245,7 @@ export function PublicEventsPage() {
         </label>
       </section>
 
+      {optionsError && <div className="public-events-error" role="alert">{optionsError}</div>}
       {error && <div className="public-events-error">{error}</div>}
 
       <section className="public-events-grid" aria-busy={isLoading}>

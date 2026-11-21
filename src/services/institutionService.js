@@ -41,10 +41,11 @@ function buildInstitutionFormData(payload) {
 }
 
 function normalizeInstitution(institution) {
-  const id = institution.id ?? institution.Id ?? null;
-  const codigo = institution.codigo || institution.Codigo || "";
+  const rawId = institution.id ?? institution.Id;
+  const id = Number.isInteger(Number(rawId)) && Number(rawId) > 0 ? Number(rawId) : null;
+  const codigo = String(institution.codigo || institution.Codigo || "").trim();
   const nome = institution.nome || institution.Nome || institution.nomeAbreviado || institution.NomeAbreviado || "";
-  const filterValue = id ? `id:${id}` : `codigo:${codigo}`;
+  const filterValue = id ? `id:${id}` : codigo ? `codigo:${codigo}` : '';
 
   return {
     ...institution,
