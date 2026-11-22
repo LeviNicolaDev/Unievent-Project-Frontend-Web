@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { useTheme } from '../hooks/useTheme.js';
 import { PrivateRoute } from '../components/PrivateRoute.jsx';
 import { PublicParticipantRoute } from '../components/PublicParticipantRoute.jsx';
 import { AdminLayout } from '../layouts/AdminLayout.jsx';
@@ -32,6 +33,8 @@ import { SupportPage } from '../pages/SupportPage.jsx';
 import { PasswordRecoveryPage } from '../pages/PasswordRecoveryPage.jsx';
 
 export function AppRoutes() {
+  useTheme();
+
   return (
     <Routes>
       <Route element={<PublicLayout />}>
