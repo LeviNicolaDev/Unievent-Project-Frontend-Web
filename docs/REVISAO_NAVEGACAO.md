@@ -48,11 +48,11 @@ EmailSettings__PublicLoginUrl=https://unievent-web.vercel.app/entrar
 Cors__AllowedOrigins__0=https://unievent-web.vercel.app
 ```
 
-`EmailSettings__ConfirmationBaseUrl` deve apontar à origem HTTPS da API. Se estiver ausente, o template usa `/confirmar-email` no front. O Terraform usa `web_url` para os destinos e CORS; configure `web_url = "https://unievent-web.vercel.app"`. Alterar exemplos ou appsettings localmente não altera as variáveis já configuradas no Azure.
+`EmailSettings__ConfirmationBaseUrl` deve apontar à origem HTTPS da API. Se estiver ausente, o template usa `/confirmar-email` no front. A pipeline da API usa `WEB_URL=https://unievent-web.vercel.app` para configurar destinos e CORS. Alterar exemplos ou appsettings localmente não altera as variáveis já configuradas no Azure.
 
 ## Cobertura e limites
 
-Os testes Playwright cobrem navegação móvel, sessões independentes, logout, retorno após login, prévia selecionada, sessão expirada, confirmação de e-mail, detalhes e ingressos. As chamadas de autenticação e alterações são simuladas; nenhuma conta ou inscrição foi criada no deploy durante a revisão. Não houve envio SMTP real, publicação na Vercel ou aplicação de Terraform.
+Os testes Playwright cobrem navegação móvel, sessões independentes, logout, retorno após login, prévia selecionada, sessão expirada, confirmação de e-mail, detalhes e ingressos. As chamadas de autenticação e alterações são simuladas; nenhuma conta ou inscrição foi criada no deploy durante a revisão. Não houve envio SMTP real, publicação na Vercel ou alteração dos recursos Azure.
 
 Rotas públicas de eventos continuam acessíveis após logout. Inscrição, ingressos e áreas administrativas exigem autenticação.
 

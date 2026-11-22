@@ -65,6 +65,9 @@ export function LoginPage({ initialMode = "signin" }) {
       }
 
       if (isSignUp) {
+        if (!/^[^@\s]+@(fatec\.sp\.gov\.br|aluno\.cps\.sp\.gov\.br)$/i.test(email.trim())) {
+          throw new Error("Use um e-mail institucional @fatec.sp.gov.br ou @aluno.cps.sp.gov.br.");
+        }
         if (!name || !confirmPassword) {
           throw new Error(t("fillAllFields") || "Preencha todos os campos");
         }
@@ -74,7 +77,7 @@ export function LoginPage({ initialMode = "signin" }) {
 
         await saveInitialAdminUnievent({
           nomeUsuario: name,
-          emailUsuario: email,
+          emailUsuario: email.trim(),
           senha: password,
         });
 
@@ -255,7 +258,7 @@ export function LoginPage({ initialMode = "signin" }) {
                 <Mail size={18} />
                 <input
                   type="email"
-                  placeholder={isSignUp ? "admin@unievent.com" : "nome@fatec.sp.gov.br"}
+                  placeholder={isSignUp ? "admin@fatec.sp.gov.br" : "nome@fatec.sp.gov.br"}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required

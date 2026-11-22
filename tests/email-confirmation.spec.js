@@ -72,7 +72,7 @@ test('cadastro admin delega envio e geração de chave à API', async ({ page })
   await page.goto('/login');
   await page.getByRole('button', { name: 'Cadastro Admin UniEvent', exact: true }).click();
   await page.locator('input').nth(0).fill('Admin');
-  await page.locator('input[type=email]').fill('admin@example.com');
+  await page.locator('input[type=email]').fill('admin@aluno.cps.sp.gov.br');
   await page.locator('input[type=password]').nth(0).fill('senha123');
   await page.locator('input[type=password]').nth(1).fill('senha123');
   await page.locator('button[type=submit]').click();
@@ -87,4 +87,21 @@ test('link inválido apresenta erro de confirmação', async ({ page }) => {
   }));
   await page.goto('/confirmar-email?chave=invalida');
   await expect(page.getByText('Chave de confirmação inválida ou expirada.')).toBeVisible();
+});
+
+ test('cadastro admin bloqueia domínio institucional incorreto antes da API', async ({ page }) => {
+  let calls = 0;
+  await page.route('**/api/UsuarioUnievent/admin-inicial', route => {
+    calls++;
+    return route.fulfill({ json: { id: 1, emailConfirmado: false } });
+  });
+  await page.goto('/login');
+  await page.getByRole('button', { name: 'Cadastro Admin UniEvent', exact: true }).click();
+  await page.locator('input').nth(0).fill('Admin');
+  await page.locator('input[type=email]').fill('admin@aluno.sp.gov.br');
+  await page.locator('input[type=password]').nth(0).fill('senha123');
+  await page.locator('input[type=password]').nth(1).fill('senha123');
+  await page.locator('button[type=submit]').click();
+  await expect(page.locator('.auth-error-message')).toContainText('@aluno.cps.sp.gov.br');
+  expect(calls).toBe(0);
 });
