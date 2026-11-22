@@ -337,7 +337,7 @@ body.light-mode .form-field textarea {
   width: 100%;
   min-width: 1020px;
   border-collapse: collapse;
-  color: var(--primary-white);
+  color: inherit;
 }
 
 .data-table th,
@@ -377,7 +377,7 @@ body.light-mode .form-field textarea {
   border: 1px solid var(--primary-orange);
   border-radius: 8px;
   background: transparent;
-  color: var(--primary-white);
+  color: inherit;
 }
 
 .modal-backdrop {
