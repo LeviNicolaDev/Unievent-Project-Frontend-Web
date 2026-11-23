@@ -6122,6 +6122,59 @@ body.light-mode .ticket-qr-unavailable {
   line-height: 1.5;
 }
 
+.ticket-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.public-event-detail .cancel-registration-button,
+.public-ticket-detail .cancel-registration-button {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 15px;
+  border: 1px solid rgba(245, 111, 34, 0.45);
+  border-radius: 10px;
+  background: rgba(245, 111, 34, 0.08);
+  color: var(--public-text);
+  font-size: 0.85rem;
+  font-weight: 800;
+  line-height: 1.4;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.cancel-registration-button svg {
+  flex-shrink: 0;
+  color: var(--primary-orange);
+}
+
+.public-event-detail .cancel-registration-button:hover:not(:disabled),
+.public-ticket-detail .cancel-registration-button:hover:not(:disabled) {
+  border-color: var(--primary-orange);
+  background: rgba(245, 111, 34, 0.16);
+}
+
+.cancel-registration-button:focus-visible {
+  outline: 3px solid var(--primary-orange);
+  outline-offset: 3px;
+}
+
+.public-event-detail .cancel-registration-button:disabled,
+.public-ticket-detail .cancel-registration-button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+@media (max-width: 560px) {
+  .ticket-detail-actions .cancel-registration-button {
+    width: 100%;
+  }
+}
+
 .ticket-detail-qr-panel {
   display: grid;
   place-items: center;

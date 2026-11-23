@@ -66,9 +66,9 @@ export function PublicTicketDetailPage() {
             <div className="ticket-detail-status">Inscrição ativa · aguardando check-in</div>
           )}
           {ticket.eventoRealizado && <p className="ticket-detail-history">Este evento já aconteceu. O ingresso permanece no seu histórico.</p>}
-          {!cancelled && !ticket.presencaConfirmada && <CancelRegistrationButton eventId={eventoId} onCancelled={() => {
+          {!cancelled && !ticket.presencaConfirmada && <div className="ticket-detail-actions"><CancelRegistrationButton eventId={eventoId} onCancelled={() => {
             setTicket(current => ({ ...current, statusInscricao: 'cancelada', podeRealizarCheckIn: false }));
-          }} />}
+          }} /></div>}
         </div>
 
         <div className="ticket-detail-qr-panel">

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { XCircle } from 'lucide-react';
 import { cancelEventRegistration } from '../../services/eventService.js';
 
 export function CancelRegistrationButton({ eventId, onCancelled }) {
@@ -20,7 +21,8 @@ export function CancelRegistrationButton({ eventId, onCancelled }) {
   }
 
   return <>
-    <button className="public-event-detail__button" type="button" disabled={busy} onClick={cancel}>
+    <button className="public-event-detail__button cancel-registration-button" type="button" disabled={busy} onClick={cancel}>
+      <XCircle size={18} aria-hidden="true" />
       {busy ? 'Cancelando...' : 'Cancelar inscrição'}
     </button>
     {error && <p role="alert">{error}</p>}
