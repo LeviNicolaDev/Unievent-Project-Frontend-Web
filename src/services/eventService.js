@@ -1,7 +1,7 @@
 import { getApiAssetUrl, request } from "./apiClient.js";
 import { eventDateParts } from "../utils/eventDate.js";
 
-const EVENT_CATEGORIES = ["Palestra", "Workshop", "Feira", "Evento", "Festa"];
+const EVENT_CATEGORIES = ["Palestra", "Workshop", "Feira", "Evento", "Festa", "Curso", "Musica", "Hackathon"];
 const CATEGORY_BY_NORMALIZED_NAME = EVENT_CATEGORIES.reduce((map, category) => {
   map[category.toLowerCase()] = category;
   return map;

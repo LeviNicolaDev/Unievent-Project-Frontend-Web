@@ -91,6 +91,9 @@ export function EventsPage() {
       Feira: "Feira",
       Evento: "Evento",
       Festa: "Festa",
+      Curso: "Curso",
+      Musica: "Música",
+      Hackathon: "Hackathon",
     };
 
     return labels[category] || category;

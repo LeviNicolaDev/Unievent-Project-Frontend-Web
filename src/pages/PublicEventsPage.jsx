@@ -218,7 +218,7 @@ export function PublicEventsPage() {
           >
             <option value="">Todas as categorias</option>
             {categories.map((category) => (
-              <option key={category} value={category}>{category}</option>
+              <option key={category} value={category}>{category === 'Musica' ? 'Música' : category}</option>
             ))}
           </select>
         </label>

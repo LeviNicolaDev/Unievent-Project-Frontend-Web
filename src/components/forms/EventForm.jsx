@@ -81,6 +81,9 @@ export function EventForm({ event, institutions = [], responsiblePeople, showIns
       { value: "Feira", label: "Feira" },
       { value: "Evento", label: "Evento" },
       { value: "Festa", label: "Festa" },
+      { value: "Curso", label: "Curso" },
+      { value: "Musica", label: "Música" },
+      { value: "Hackathon", label: "Hackathon" },
     ],
     [t],
   );
