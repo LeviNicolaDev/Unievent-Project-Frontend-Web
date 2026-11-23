@@ -1,3 +1,4 @@
+import { useDashboardRefresh } from '../hooks/useDashboardRefresh.js';
 import { Award, CalendarDays, CheckCircle2, ScanLine, UserRoundCheck, UsersRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -46,6 +47,7 @@ export function InstituicaoDashboardPage() {
   const [dashboard, setDashboard] = useState(null);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  useDashboardRefresh(getInstituicaoDashboard, setDashboard, setError);
 
   useEffect(() => {
     let active = true;

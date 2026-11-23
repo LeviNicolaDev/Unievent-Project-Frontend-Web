@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { TicketQrCode } from "../components/tickets/TicketQrCode.jsx";
 import { getMyTicket } from "../services/ticketService.js";
+import { CancelRegistrationButton } from '../components/tickets/CancelRegistrationButton.jsx';
+import { EVENT_TIME_ZONE, parseEventDate } from '../utils/eventDate.js';
 
 function isCancelled(ticket) {
   return String(ticket?.statusInscricao).toLowerCase() === "cancelada";
@@ -40,7 +42,7 @@ export function PublicTicketDetailPage() {
   }
 
   const cancelled = isCancelled(ticket);
-  const date = new Date(ticket.dataEvento);
+  const date = parseEventDate(ticket.dataEvento);
   const validDate = !Number.isNaN(date.getTime());
 
   return (
@@ -52,8 +54,8 @@ export function PublicTicketDetailPage() {
           <h1>{ticket.nomeEvento}</h1>
           <p className="ticket-detail-institution">{ticket.instituicaoNome}</p>
           <ul>
-            <li><CalendarDays size={19} /> {validDate ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" }).format(date) : "Data não informada"}</li>
-            <li><Clock3 size={19} /> {validDate ? new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit" }).format(date) : "Horário não informado"}</li>
+            <li><CalendarDays size={19} /> {validDate ? new Intl.DateTimeFormat("pt-BR", { timeZone: EVENT_TIME_ZONE, dateStyle: "long" }).format(date) : "Data não informada"}</li>
+            <li><Clock3 size={19} /> {validDate ? new Intl.DateTimeFormat("pt-BR", { timeZone: EVENT_TIME_ZONE, hour: "2-digit", minute: "2-digit" }).format(date) : "Horário não informado"}</li>
             <li><MapPin size={19} /> {ticket.local}</li>
           </ul>
           {cancelled ? (
@@ -64,6 +66,9 @@ export function PublicTicketDetailPage() {
             <div className="ticket-detail-status">Inscrição ativa · aguardando check-in</div>
           )}
           {ticket.eventoRealizado && <p className="ticket-detail-history">Este evento já aconteceu. O ingresso permanece no seu histórico.</p>}
+          {!cancelled && !ticket.presencaConfirmada && <CancelRegistrationButton eventId={eventoId} onCancelled={() => {
+            setTicket(current => ({ ...current, statusInscricao: 'cancelada', podeRealizarCheckIn: false }));
+          }} />}
         </div>
 
         <div className="ticket-detail-qr-panel">

@@ -5,17 +5,18 @@ import logo from "../assets/images/logo.svg";
 import { TicketQrCode } from "../components/tickets/TicketQrCode.jsx";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import { listMyTickets } from "../services/ticketService.js";
+import { EVENT_TIME_ZONE, parseEventDate } from '../utils/eventDate.js';
 
 function isCancelled(ticket) {
   return String(ticket.statusInscricao).toLowerCase() === "cancelada";
 }
 
 function formatEventDate(value) {
-  const date = new Date(value);
+  const date = parseEventDate(value);
   if (Number.isNaN(date.getTime())) return { date: "Data não informada", time: "" };
   return {
-    date: new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" }).format(date),
-    time: new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit" }).format(date),
+    date: new Intl.DateTimeFormat("pt-BR", { timeZone: EVENT_TIME_ZONE, dateStyle: "long" }).format(date),
+    time: new Intl.DateTimeFormat("pt-BR", { timeZone: EVENT_TIME_ZONE, hour: "2-digit", minute: "2-digit" }).format(date),
   };
 }
 

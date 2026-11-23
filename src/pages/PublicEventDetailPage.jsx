@@ -19,6 +19,7 @@ import { getEventById, getMyEventRegistration, registerForEvent } from "../servi
 import { formatDate, getAssetUrl } from "../utils/formatters.js";
 import { downloadMyCertificate } from "../services/certificateService.js";
 import { request } from "../services/apiClient.js";
+import { CancelRegistrationButton } from '../components/tickets/CancelRegistrationButton.jsx';
 
 const AUDIENCE_LABELS = {
   PublicoGeral: "Público geral",
@@ -52,6 +53,7 @@ export function PublicEventDetailPage() {
   const [ticketCode, setTicketCode] = useState("");
   const [downloading, setDownloading] = useState(false);
   const publicUser = isPublicParticipant(user);
+  const cancelled = String(registration?.statusInscricao).toLowerCase() === 'cancelada';
 
   useEffect(() => {
     let active = true;
@@ -86,13 +88,13 @@ export function PublicEventDetailPage() {
   useEffect(() => {
     let active = true;
     setTicketCode("");
-    if (registration && publicUser) {
+    if (registration && publicUser && !cancelled) {
       request(`/Evento/${id}/ingresso`).then(ticket => {
         if (active) setTicketCode(ticket.codigoIngresso);
       }).catch(err => { if (active) setActionError(err.message); });
     }
     return () => { active = false; };
-  }, [id, Boolean(registration), publicUser]);
+  }, [id, Boolean(registration), publicUser, cancelled]);
 
   async function refreshRegistration() {
     setActionError("");
@@ -232,11 +234,11 @@ export function PublicEventDetailPage() {
                 <span className="public-event-registration__icon"><CheckCircle2 size={22} aria-hidden="true" /></span>
                 <div>
                   <span>Sua inscrição</span>
-                  <h2>Você já está inscrito</h2>
+                  <h2>{cancelled ? 'Inscrição cancelada' : 'Você já está inscrito'}</h2>
                 </div>
               </div>
 
-              <div className="public-event-registration__status">
+              {!cancelled && <div className="public-event-registration__status">
                 <div>
                   <CheckCircle2 size={18} aria-hidden="true" />
                   <p>
@@ -252,14 +254,20 @@ export function PublicEventDetailPage() {
                     <p><strong>Certificado enviado</strong>O PDF também foi enviado para seu e-mail</p>
                   </div>
                 )}
-              </div>
+              </div>}
 
               <div className="public-event-registration__actions">
-                {ticketCode && (
+                {!cancelled && ticketCode && (
                   <Link className="public-event-detail__button public-event-detail__button--primary" to={`/meus-ingressos/${id}`}>
                     <Ticket size={18} aria-hidden="true" /> Ver meu ingresso
                   </Link>
                 )}
+                {!cancelled && !registration.presencaGarantida && <CancelRegistrationButton eventId={id} onCancelled={async result => {
+                  setRegistration(result);
+                  setTicketCode('');
+                  setActionSuccess('Inscrição cancelada com sucesso.');
+                  setEvent(await getEventById(id, { skipAuth: false }));
+                }} />}
                 <button className="public-event-detail__button" type="button" onClick={refreshRegistration}>
                   <RefreshCw size={18} aria-hidden="true" /> Atualizar presença
                 </button>

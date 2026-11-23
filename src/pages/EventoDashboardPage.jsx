@@ -1,3 +1,4 @@
+import { useDashboardRefresh } from '../hooks/useDashboardRefresh.js';
 import { Award, CalendarDays, CheckCircle2, MapPin, Percent, Ticket, UserRoundCheck, UsersRound } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -29,6 +30,7 @@ export function EventoDashboardPage() {
   const [dashboard, setDashboard] = useState(null);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  useDashboardRefresh(() => getEventoDashboard(id), setDashboard, setError, id);
   const routePrefix = user?.roleUsuario === "Secretaria" ? "/instituicao/eventos" : "/eventos";
   const checkInPath = user?.roleUsuario === "Secretaria" ? "/instituicao/check-in" : "/check-in";
 

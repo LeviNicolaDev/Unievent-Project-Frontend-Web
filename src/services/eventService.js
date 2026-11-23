@@ -1,4 +1,5 @@
 import { getApiAssetUrl, request } from "./apiClient.js";
+import { eventDateParts } from "../utils/eventDate.js";
 
 const EVENT_CATEGORIES = ["Palestra", "Workshop", "Feira", "Evento", "Festa"];
 const CATEGORY_BY_NORMALIZED_NAME = EVENT_CATEGORIES.reduce((map, category) => {
@@ -23,7 +24,7 @@ function toDateInput(value) {
     return "";
   }
 
-  return String(value).slice(0, 10);
+  return eventDateParts(value).date;
 }
 
 function toTimeInput(value) {
@@ -31,7 +32,7 @@ function toTimeInput(value) {
     return "";
   }
 
-  return String(value).slice(11, 16);
+  return eventDateParts(value).time;
 }
 
 function combineDateTime(date, time) {
@@ -105,7 +106,7 @@ export function normalizeEvent(event) {
     category: categoria,
     dataEvento,
     date: toDateInput(dataEvento),
-    time: event.time || event.hora || toTimeInput(dataEvento),
+    time: toTimeInput(dataEvento) || event.time || event.hora || "",
     capacidade,
     capacity: capacidade,
     vagasDisponiveis: event.vagasDisponiveis ?? event.VagasDisponiveis ?? null,
@@ -293,6 +294,10 @@ export async function getMyEventRegistration(id) {
     console.error(`Erro ao consultar inscrição do evento ${id}:`, error);
     throw error;
   }
+}
+
+export function cancelEventRegistration(id) {
+  return request(`/Evento/${id}/inscricao`, { method: 'DELETE' });
 }
 
 export async function saveEvent(payload) {

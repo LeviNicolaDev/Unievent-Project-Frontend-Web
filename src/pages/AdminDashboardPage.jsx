@@ -1,3 +1,4 @@
+import { useDashboardRefresh } from '../hooks/useDashboardRefresh.js';
 import {
   Award,
   Building2,
@@ -32,6 +33,7 @@ export function AdminDashboardPage() {
   const [dashboard, setDashboard] = useState(null);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  useDashboardRefresh(getAdminDashboard, setDashboard, setError);
 
   useEffect(() => {
     let active = true;
